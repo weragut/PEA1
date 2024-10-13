@@ -1,0 +1,11 @@
+# Ignorowanie folderu cmake-build-debug
+cmake-build-debug/
+
+# Ignorowanie plików binarnych, wykonywalnych
+#*.exe
+*.out
+*.o
+
+# Ignorowanie plików tymczasowych systemowych
+*.log
+
