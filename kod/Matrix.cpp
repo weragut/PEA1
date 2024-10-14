@@ -1,7 +1,7 @@
 #include "Matrix.h"
 #include <iostream>
 #include <fstream>
-#include <cstdlib>  // Dla funkcji rand()
+#include <cstdlib>  // do funkcji rand()
 
 Matrix::Matrix() : matrix(nullptr), size(0) {}
 
@@ -12,15 +12,15 @@ Matrix::~Matrix() {
 bool Matrix::loadFromFile(const std::string& filename) {
     std::ifstream inputFile(filename);
     if (!inputFile.is_open()) {
-        std::cout << "Próba otwarcia pliku: " << filename << std::endl;
+        std::cout << "Proba otwarcia pliku: " << filename << std::endl;
 
-        std::cerr << "Nie można otworzyć pliku: " << filename << std::endl;
+        std::cerr << "Nie można otworzyc pliku: " << filename << std::endl;
         return false;
     }
 
-    inputFile >> size;
+    inputFile >> size; // nadpisanie poprawnego rozmiaru
 
-    // Dynamiczna alokacja pamięci dla macierzy
+    // dynamiczna alokacja pamieci dla macierzy
     matrix = new int*[size];
     for (int i = 0; i < size; ++i) {
         matrix[i] = new int[size];

@@ -1,18 +1,19 @@
 #include "Config.h"
 #include <iostream>
 #include <fstream>
+using namespace std;
 
 bool Config::loadConfig(const std::string& filename) {
     std::ifstream file(filename);
 
     if (!file.is_open()) {
-        std::cerr << "Nie można otworzyć pliku konfiguracyjnego: " << filename << std::endl;
+        std::cerr << "Nie mozna otworzyc pliku konfiguracyjnego: " << filename << std::endl;
         return false;
     }
 
-    std::string key;
-    while (file >> key) {
-        if (key == "matrix_source") {
+    string key;
+    while (file >> key) { // odczytywanie kluczy, w kazdej iteracji jest odczytywany nowy klucz
+        if (key == "matrix_source") { // sprawdzenie klucza i przypisanie wartosci
             file >> matrix_source;
         } else if (key == "output_file") {
             file >> output_file;

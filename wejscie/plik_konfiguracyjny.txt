@@ -1,14 +1,14 @@
-matrix_source manual
+matrix_source file
 output_file C:\Users\werag\Documents\clionProjekty\PEA1\wyniki\results.txt
 repetitions 1
 instances 1
 input_file C:/Users/werag/Documents/clionProjekty/PEA1/wejscie/matrix_6x6.txt
-matrix_size 8
+matrix_size 7
 matrix_type asynchronous
 
 
 
-
+# muszę jeszcze dopisać typ algorytmu ale to później
 
 
 

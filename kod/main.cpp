@@ -3,16 +3,16 @@
 #include "Matrix.h"
 
 int main() {
-    // Wczytaj konfigurację
+    // wczytaj plik konfoguracyjny
     Config config;
     if (!config.loadConfig("C:\\Users\\werag\\Documents\\clionProjekty\\PEA1\\wejscie\\plik_konfiguracyjny.txt")) {
         return 1;
     }
 
-    // Deklaracja macierzy
+    // deklaracja macierzy
     Matrix matrix;
 
-    // Wybierz sposób wczytywania/generowania macierzy
+    // wybieranie sposobu generowania macierzy z pliku lub generowanej losowo
     if (config.matrix_source == "file") {
         if (!matrix.loadFromFile(config.input_file)) {
             return 1;
@@ -21,12 +21,12 @@ int main() {
         matrix.generateManual(config.matrix_size, config.matrix_type);
     } else {
         std::cout << "matrix_source wczytano jako: [" << config.matrix_source << "]" << std::endl;
-        std::cerr << "Niepoprawna wartość dla matrix_source!" << std::endl;
+        std::cerr << "Niepoprawna wartosc dla matrix_source!" << std::endl;
 
         return 1;
     }
 
-    // Wyświetlenie macierzy
+    // wyswietlenie macierzy
     matrix.display();
 
     // Wyniki można zapisywać do pliku w kolejnych krokach

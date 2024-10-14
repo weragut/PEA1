@@ -5,18 +5,17 @@
 
 class Matrix {
 public:
-    Matrix();           // Konstruktor
-    ~Matrix();          // Destruktor
+    Matrix();           // konstruktor
+    ~Matrix();          // dekonstruktor
 
-    bool loadFromFile(const std::string& filename);   // Wczytuje macierz z pliku
-    void generateManual(int size, const std::string& type);  // Generuje macierz ręcznie
+    bool loadFromFile(const std::string& filename);   // wczytywanie macierzy z pliku
+    void generateManual(int size, const std::string& type);  // generowanie losowej macierzy
 
-    void display() const;  // Wyświetla macierz
-    void freeMemory();     // Zwalnia pamięć
-
+    void display() const;  // wyswietlenie macierzy
+    void freeMemory();     // zwolnienie pamieci
 private:
-    int** matrix;          // Wskaźnik do dynamicznej tablicy 2D
-    int size;              // Rozmiar macierzy
+    int** matrix;          // wskaznik do dwuwymiarowej tablicy dynamicznej
+    int size;              // rozmiar macierzy
 };
 
 #endif
