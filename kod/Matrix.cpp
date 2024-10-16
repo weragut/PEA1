@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>  // do funkcji rand()
+using namespace std;
 
 Matrix::Matrix() : matrix(nullptr), size(0) {}
 
@@ -9,12 +10,12 @@ Matrix::~Matrix() {
     freeMemory();
 }
 
-bool Matrix::loadFromFile(const std::string& filename) {
-    std::ifstream inputFile(filename);
+bool Matrix::loadFromFile(const string& filename) {
+    ifstream inputFile(filename);
     if (!inputFile.is_open()) {
-        std::cout << "Proba otwarcia pliku: " << filename << std::endl;
+        cout << "Proba otwarcia pliku: " << filename << endl;
 
-        std::cerr << "Nie można otworzyc pliku: " << filename << std::endl;
+        cerr << "Nie można otworzyc pliku: " << filename << endl;
         return false;
     }
 
@@ -36,7 +37,7 @@ bool Matrix::loadFromFile(const std::string& filename) {
     return true;
 }
 
-void Matrix::generateManual(int size, const std::string& type) {
+void Matrix::generateManual(int size, const string& type) {
     // Dealokacja pamięci przed wczytaniem nowej macierzy
     freeMemory();
     this->size = size;
@@ -74,12 +75,12 @@ void Matrix::generateManual(int size, const std::string& type) {
 void Matrix::display() const {
     if (matrix == nullptr) return;
 
-    std::cout << "Macierz (" << size << "x" << size << "):" << std::endl;
+    cout << "Macierz (" << size << "x" << size << "):" << endl;
     for (int i = 0; i < size; ++i) {
         for (int j = 0; j < size; ++j) {
-            std::cout << matrix[i][j] << " ";
+            cout << matrix[i][j] << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
 }
 
@@ -90,5 +91,16 @@ void Matrix::freeMemory() {
         }
         delete[] matrix;
         matrix = nullptr;
+    }
+}
+int Matrix::getSize() const {
+    return size;  // Zwraca rozmiar macierzy
+}
+
+int Matrix::getCost(int i, int j) const {
+    if (i >= 0 && i < size && j >= 0 && j < size) {
+        return matrix[i][j];
+    } else {
+        return -1;  // Zwróć -1, jeśli indeksy są poza zakresem
     }
 }

@@ -1,9 +1,9 @@
-matrix_source manual
+matrix_source file
 output_file C:\Users\werag\Documents\clionProjekty\PEA1\wyniki\results.txt
 repetitions 1
 instances 1
-input_file C:\Users\werag\Documents\clionProjekty\PEA1\wejscie\tsp_10_sym.txt
-matrix_size 7
+input_file C:\Users\werag\Documents\clionProjekty\PEA1\wejscie\matrix_11x11.txt
+matrix_size 6
 matrix_type synchronous
 
 

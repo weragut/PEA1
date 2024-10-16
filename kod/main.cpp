@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Config.h"
 #include "Matrix.h"
+#include "PrzegladZupelny.h"
+using namespace std;
 
 int main() {
     // wczytaj plik konfoguracyjny
@@ -20,14 +22,22 @@ int main() {
     } else if (config.matrix_source == "manual") {
         matrix.generateManual(config.matrix_size, config.matrix_type);
     } else {
-        std::cout << "matrix_source wczytano jako: [" << config.matrix_source << "]" << std::endl;
-        std::cerr << "Niepoprawna wartosc dla matrix_source!" << std::endl;
+        cout << "matrix_source wczytano jako: [" << config.matrix_source << "]" << endl;
+        cerr << "Niepoprawna wartosc dla matrix_source!" << endl;
 
         return 1;
     }
 
     // wyswietlenie macierzy
     matrix.display();
+
+
+    // Tworzenie obiektu PrzegladZupelny i znajdowanie najkrótszej ścieżki
+    PrzegladZupelny przeglad(matrix);
+    int minCost = przeglad.findShortestPath();
+    przeglad.displayBestPath();
+
+    std::cout << "Minimalny koszt: " << minCost << std::endl;
 
     // Wyniki można zapisywać do pliku w kolejnych krokach
 
