@@ -18,6 +18,9 @@ bool Matrix::loadFromFile(const std::string& filename) {
         return false;
     }
 
+    // Dealokacja pamięci przed wczytaniem nowej macierzy
+    freeMemory();
+
     inputFile >> size; // nadpisanie poprawnego rozmiaru
 
     // dynamiczna alokacja pamieci dla macierzy
@@ -34,22 +37,38 @@ bool Matrix::loadFromFile(const std::string& filename) {
 }
 
 void Matrix::generateManual(int size, const std::string& type) {
+    // Dealokacja pamięci przed wczytaniem nowej macierzy
+    freeMemory();
     this->size = size;
-    matrix = new int*[size];
-    for (int i = 0; i < size; ++i) {
-        matrix[i] = new int[size];
-        for (int j = 0; j < size; ++j) {
-            if (i == j) {
-                matrix[i][j] = -1;  // Przekątna
-            } else {
-                if (type == "synchronous") {
-                    matrix[i][j] = 1;  // Synchroniczna macierz
+    matrix = new int*[size]; // alokacja pamięci tablicy wskaźników int*, która ma size elementów
+
+    if(type == "asynchronous") {
+        for (int i = 0; i < size; ++i) {
+            matrix[i] = new int[size];
+            for (int j = 0; j < size; ++j) {
+                if (i == j) {
+                    matrix[i][j] = -1;  // Przekątna
                 } else {
                     matrix[i][j] = rand() % 100 + 1;  // Asynchroniczna macierz
                 }
             }
         }
+    }else{
+        for (int i = 0; i < size; ++i) {
+            matrix[i] = new int[size];
+            for (int j = 0; j < size; ++j) {
+                if (i == j) {
+                    matrix[i][j] = -1;  // Przekątna
+                } else if(i<j){
+                    matrix[i][j] = rand() % 100 + 1;  // Asynchroniczna macierz
+                }else if(i>j) {
+                    matrix[i][j] = matrix[j][i];
+                }
+            }
+        }
+
     }
+
 }
 
 void Matrix::display() const {
