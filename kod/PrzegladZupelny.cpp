@@ -3,61 +3,69 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
-using namespace std;
 
+// Konstruktor
 PrzegladZupelny::PrzegladZupelny(const Matrix& m)
-    : matrix(m), size(m.getSize()), minCost(numeric_limits<int>::max()) {}
+    : matrix(m), size(m.getSize()), minCost(std::numeric_limits<int>::max()) {}
 
-// Metoda, która oblicza najkrótszą ścieżkę
+// metoda obliczenia najkrotszej sciezki
 int PrzegladZupelny::findShortestPath() {
-    vector<int> cities(size);
+    std::vector<int> cities(size);  // wektor miast
     for (int i = 0; i < size; ++i) {
-        cities[i] = i;
+        cities[i] = i;  // wypełnienie wektora miastami (0, 1, ..., size-1)
     }
 
-    // Przetwarzanie wszystkich permutacji
+    // przetwarzanie wszystkich permutacji
     do {
-        int currentCost = 0;
-        bool validPath = true;
+        int currentCost = 0;  // koszt aktualnej trasy
+        bool validPath = true;  // flaga wskazująca, czy trasa jest możliwa
 
-        // Oblicz koszt ścieżki dla aktualnej permutacji
+        // koszt ścieżki dla aktualnej permutacji
         for (int i = 0; i < size - 1; ++i) {
             int cost = matrix.getCost(cities[i], cities[i + 1]);
             if (cost == -1) {
-                validPath = false;
+                validPath = false;  // brak połączenia
                 break;
             }
             currentCost += cost;
-        }
 
-        // Dodaj koszt powrotu do pierwszego miasta
-        int returnCost = matrix.getCost(cities[size - 1], cities[0]);
-        if (validPath && returnCost != -1) {
-            currentCost += returnCost;
-
-            // Aktualizacja minimalnego kosztu i najlepszego rozwiązania
-            if (currentCost < minCost) {
-                minCost = currentCost;
-                bestPath = cities;
+            // Przerwij obliczenia, jeśli dotychczasowy koszt jest większy niż minCost
+            if (currentCost >= minCost) {
+                validPath = false;
+                break;
             }
         }
 
-    } while (std::next_permutation(cities.begin() + 1, cities.end()));
+        // dodaj koszt powrotu do pierwszego miasta, jeśli dotychczasowa trasa jest ważna
+        if (validPath) {
+            int returnCost = matrix.getCost(cities[size - 1], cities[0]);
+            if (returnCost != -1) {
+                currentCost += returnCost;
+
+                // Aktualizacja minimalnego kosztu i najlepszego rozwiązania
+                if (currentCost < minCost) {
+                    minCost = currentCost;
+                    bestPath = cities;  // Zapisz najlepszą trasę
+                }
+            }
+        }
+
+    } while (std::next_permutation(cities.begin(), cities.end()));  // pełne permutacje miast
 
     return minCost;
 }
 
-// Wyświetlanie najkrótszej ścieżki
+// wyświetlanie najkrótszej ścieżki
 void PrzegladZupelny::displayBestPath() const {
-    cout << "Najkrotsza sciezka: ";
+    std::cout << "Najkrotsza sciezka: ";
     for (int city : bestPath) {
-        std::cout << city << " ";
+        std::cout << city << " ";  // wypisz kolejność miast
     }
-    cout << bestPath[0] << endl;  // Powrót do początkowego miasta
-    cout << "Koszt: " << minCost << endl;
+    std::cout << bestPath[0] << std::endl;  // powrót do początkowego miasta
+    std::cout << "Koszt: " << minCost << std::endl;
 }
 
-// Zwraca minimalny koszt
+// zwrócenie minimalnego kosztu
 int PrzegladZupelny::getMinCost() const {
     return minCost;
 }

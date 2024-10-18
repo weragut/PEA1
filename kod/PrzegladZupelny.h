@@ -7,7 +7,7 @@
 
 class PrzegladZupelny {
 public:
-    PrzegladZupelny(const Matrix& matrix);
+    PrzegladZupelny(const Matrix& matrix); // konstruktor
     int findShortestPath();  // Znajdź najkrótszą ścieżkę
     void displayBestPath() const;  // Wyświetl najlepszą ścieżkę
     int getMinCost() const;  // Zwraca minimalny koszt
@@ -17,7 +17,7 @@ private:
     int size;  // Rozmiar macierzy (liczba miast)
     std::vector<int> bestPath;  // Najkrótsza znaleziona ścieżka
     int minCost;  // Koszt najkrótszej ścieżki
-    void calculateAllPermutations();  // Oblicza wszystkie permutacje miast
+   // void calculateAllPermutations();  // Oblicza wszystkie permutacje miast
 };
 
 #endif
