@@ -28,12 +28,13 @@ int PrzegladZupelny::findShortestPath() {
                 break;
             }
             currentCost += cost;
-
+/*
             // Przerwij obliczenia, jeśli dotychczasowy koszt jest większy niż minCost
             if (currentCost >= minCost) {
                 validPath = false;
                 break;
             }
+            */
         }
 
         // dodaj koszt powrotu do pierwszego miasta, jeśli dotychczasowa trasa jest ważna

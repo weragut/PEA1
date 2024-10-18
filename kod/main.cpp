@@ -1,7 +1,9 @@
 #include <iostream>
 #include "Config.h"
 #include "Matrix.h"
+#include "NajblizszychSasiadow.h"
 #include "PrzegladZupelny.h"
+#include "Losowy.h"
 using namespace std;
 
 int main() {
@@ -34,12 +36,29 @@ int main() {
 
     // Tworzenie obiektu PrzegladZupelny i znajdowanie najkrótszej ścieżki
     PrzegladZupelny przeglad(matrix);
-    int minCost = przeglad.findShortestPath();
+    int minCostP = przeglad.findShortestPath();
     przeglad.displayBestPath();
 
-    std::cout << "Minimalny koszt: " << minCost << std::endl;
+    std::cout << "Minimalny koszt: " << minCostP << std::endl;
 
     // Wyniki można zapisywać do pliku w kolejnych krokach
 
+    // Tworzymy obiekt algorytmu najbliższych sąsiadów
+    NajblizszychSasiadow tsp(matrix);
+
+    // Znajdujemy najkrótszą ścieżkę
+    int minCostN = tsp.findShortestPath();
+    if (minCostN != -1) {
+        tsp.displayBestPath();  // Wyświetlamy wynik
+    }
+
+    // Tworzenie obiektu algorytmu losowego
+    Losowy tsp_losowy(matrix, config.repetitions, config.instances);
+
+    // Znalezienie najkrótszej ścieżki
+    int minCostL = tsp_losowy.findShortestPath();
+    if (minCostL != -1) {
+        tsp_losowy.displayBestPath();  // Wyświetlamy wynik
+    }
     return 0;
 }
