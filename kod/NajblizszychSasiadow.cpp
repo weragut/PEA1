@@ -1,24 +1,29 @@
 #include "NajblizszychSasiadow.h"
 #include <iostream>
 #include <limits>
+#include <chrono>
 using namespace std;
 // Konstruktor
 NajblizszychSasiadow::NajblizszychSasiadow(const Matrix& m)
-    : matrix(m), size(m.getSize()), minCost(std::numeric_limits<int>::max()) {}
+    : matrix(m), size(m.getSize()), minCost(numeric_limits<int>::max()) {}
 
 // Algorytm najbliższych sąsiadów
 int NajblizszychSasiadow::findShortestPath() {
-    std::vector<int> visited(size, 0);  // Tablica odwiedzonych miast (0 - nieodwiedzone, 1 - odwiedzone)
+    vector<int> visited(size, 0);  // Tablica odwiedzonych miast (0 - nieodwiedzone, 1 - odwiedzone)
     bestPath.clear();  // Wyczyszczenie poprzednich danych
+
+    auto start = chrono::high_resolution_clock::now();
+
     int currentCity = 0;  // Zaczynamy od miasta 0 (można to zmienić na losowe miasto)
     visited[currentCity] = 1;  // Oznaczamy pierwsze miasto jako odwiedzone
     bestPath.push_back(currentCity);  // Zapisz startowe miasto do ścieżki
     minCost = 0;  // Zresetuj minimalny koszt
 
+
     // Pętla odwiedzająca wszystkie miasta
     for (int i = 1; i < size; ++i) {
         int nearestCity = -1;
-        int nearestCost = std::numeric_limits<int>::max();  // Najbliższe miasto, początkowo maksymalna wartość
+        int nearestCost = numeric_limits<int>::max();  // Najbliższe miasto, początkowo maksymalna wartość
 
         // Znajdź najbliższe nieodwiedzone miasto
         for (int j = 0; j < size; ++j) {
@@ -53,7 +58,19 @@ int NajblizszychSasiadow::findShortestPath() {
         return -1;
     }
 
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double, micro> duration = end - start;
+    cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " us" << endl;
+
+    // Zapisz czas wykonania
+    executionTime = duration.count();
+
     return minCost;
+}
+
+// Zwraca czas wykonania algorytmu
+double NajblizszychSasiadow::getExecutionTime() const {
+    return executionTime;
 }
 
 // Wyświetlanie ścieżki
@@ -62,8 +79,8 @@ void NajblizszychSasiadow::displayBestPath() const {
     for (int city : bestPath) {
         std::cout << city << " ";
     }
-    std::cout << std::endl;
-    std::cout << "Koszt: " << minCost << std::endl;
+    cout << endl;
+    cout << "Koszt: " << minCost << endl;
 }
 
 // Zwraca minimalny koszt

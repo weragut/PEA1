@@ -5,29 +5,33 @@
 #include <cstdlib>  // std::rand, std::srand
 #include <ctime>    // std::time
 #include <limits>
-
+#include <chrono>
+using namespace std;
 // Konstruktor
 Losowy::Losowy(const Matrix& m, int repetitions, int instances)
     : matrix(m), size(m.getSize()), repetitions(repetitions), instances(instances), minCost(std::numeric_limits<int>::max()) {
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));  // Inicjalizacja generatora liczb losowych
+    srand(static_cast<unsigned int>(std::time(nullptr)));  // Inicjalizacja generatora liczb losowych
 }
 
 // Generowanie losowej ścieżki
-std::vector<int> Losowy::generateRandomPath() {
-    std::vector<int> path(size);
+vector<int> Losowy::generateRandomPath() {
+    vector<int> path(size);
     for (int i = 0; i < size; ++i) {
         path[i] = i;  // Wypełnij wektor miastami
     }
-    std::random_shuffle(path.begin(), path.end());  // Losowa permutacja miast
+    random_shuffle(path.begin(), path.end());  // Losowa permutacja miast
     return path;
 }
 
 // Algorytm losowy
 int Losowy::findShortestPath() {
+
+    auto start = chrono::high_resolution_clock::now();
+
     // Wykonujemy określoną liczbę powtórzeń (repetitions)
     for (int rep = 0; rep < repetitions; ++rep) {
         for (int inst = 0; inst < instances; ++inst) {
-            std::vector<int> randomPath = generateRandomPath();  // Generowanie losowej trasy
+            vector<int> randomPath = generateRandomPath();  // Generowanie losowej trasy
 
             // Obliczanie kosztu trasy
             int currentCost = 0;
@@ -57,13 +61,24 @@ int Losowy::findShortestPath() {
             }
         }
     }
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double, micro> duration = end - start;
+    cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " us" << endl;
+
+    // Zapisz czas wykonania
+    executionTime = duration.count();
 
     return minCost;  // Zwróć minimalny znaleziony koszt
 }
 
+// Zwraca czas wykonania algorytmu
+double Losowy::getExecutionTime() const {
+    return executionTime;
+}
+
 // Wyświetlanie ścieżki
 void Losowy::displayBestPath() const {
-    std::cout << "Najkrótsza ścieżka (algorytm losowy): ";
+    std::cout << "Najkrotsza sciezka (algorytm losowy): ";
     for (int city : bestPath) {
         std::cout << city << " ";
     }

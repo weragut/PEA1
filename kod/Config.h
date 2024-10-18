@@ -9,6 +9,7 @@ public:
     // Publiczne pola konfiguracyjne
     string matrix_source;
     string output_file;
+    string alghoritm_type;
     int repetitions;
     int instances;
 

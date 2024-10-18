@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <chrono>
 
 // Konstruktor
 PrzegladZupelny::PrzegladZupelny(const Matrix& m)
@@ -14,6 +15,9 @@ int PrzegladZupelny::findShortestPath() {
     for (int i = 0; i < size; ++i) {
         cities[i] = i;  // wypełnienie wektora miastami (0, 1, ..., size-1)
     }
+
+    auto start = chrono::high_resolution_clock::now();
+
 
     // przetwarzanie wszystkich permutacji
     do {
@@ -53,7 +57,19 @@ int PrzegladZupelny::findShortestPath() {
 
     } while (std::next_permutation(cities.begin(), cities.end()));  // pełne permutacje miast
 
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double, micro> duration = end - start;
+    cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " us" << endl;
+
+    // Zapisz czas wykonania
+    executionTime = duration.count();
+
     return minCost;
+}
+
+// Zwraca czas wykonania algorytmu
+double PrzegladZupelny::getExecutionTime() const {
+    return executionTime;
 }
 
 // wyświetlanie najkrótszej ścieżki
