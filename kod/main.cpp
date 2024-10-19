@@ -1,5 +1,8 @@
 #include <iostream>
-#include <chrono>
+#include <ctime>
+#include <cstdlib>
+#include <fstream>
+#include <numeric>  // dla std::accumulate
 #include "Config.h"
 #include "Matrix.h"
 #include "NajblizszychSasiadow.h"
@@ -8,81 +11,97 @@
 using namespace std;
 
 int main() {
-    // wczytaj plik konfoguracyjny
+    srand(time(0));
+
+    // wczytaj plik konfiguracyjny
     Config config;
-    if (!config.loadConfig("C:\\Users\\werag\\Documents\\clionProjekty\\PEA1\\wejscie\\plik_konfiguracyjny.txt")) {
+    if (!config.loadConfig("wejscie/plik_konfiguracyjny.txt")) {
         return 1;
     }
 
     // deklaracja macierzy
     Matrix matrix;
 
-    double sumTime = 0.0;
+    // Wektor do przechowywania czasów wykonania dla każdej instancji
+    vector<double> executionTimes;
 
-    // wyswietlenie macierzy
-    // matrix.display();
-
-
-    for(int i = 0; i < config.repetitions; i++) {
-
-    // wybieranie sposobu generowania macierzy z pliku lub generowanej losowo
-    if (config.matrix_source == "manual") {
-        matrix.generateManual(config.matrix_size, config.matrix_type);
-    } else if (config.matrix_source == "file" && i == 0) {
+    // Jeśli źródłem jest plik, rozmiar macierzy zostanie wczytany z pliku, nie z pliku konfiguracyjnego
+    if (config.matrix_source == "file") {
         if (!matrix.loadFromFile(config.input_file)) {
             return 1;
         }
-    }else if (config.matrix_source == "file" && i != 0) {
-        return 1;
-    }else {
-        cout << "matrix_source wczytano jako: [" << config.matrix_source << "]" << endl;
-        cerr << "Niepoprawna wartosc dla matrix_source!" << endl;
+    } else if (config.matrix_source == "manual") {
+        matrix.generateManual(config.matrix_size, config.matrix_type);  // Dla manualnych danych
+    }
 
+    // Tworzenie plików CSV w trybie dopisywania
+    ofstream przegladFile("wyniki/przeglad.csv", ios::app);
+    ofstream najblizszychFile("wyniki/najblizszych.csv", ios::app);
+    ofstream losowyFile("wyniki/losowy.csv", ios::app);
+
+    // Sprawdzenie, czy pliki CSV zostały poprawnie otwarte
+    if (!przegladFile || !najblizszychFile || !losowyFile) {
+        cerr << "Nie można otworzyć plików do zapisu wyników!" << endl;
         return 1;
     }
 
+    for (int i = 0; i < config.repetitions; i++) {
+        // Wybór algorytmu
+        double executionTime = 0.0;
+        if (config.alghoritm_type == "przeglad") {
+            PrzegladZupelny przeglad(matrix);
+            int minCostP = przeglad.findShortestPath();
+            executionTime = przeglad.getExecutionTime();
+            executionTimes.push_back(executionTime);  // Dodanie czasu do wektora
 
-
-        if(config.alghoritm_type == "przeglad") {
-            // Tworzenie obiektu PrzegladZupelny i znajdowanie najkrótszej ścieżki
-            PrzegladZupelny tsp_przeglad(matrix);
-            int minCostP = tsp_przeglad.findShortestPath();
-            tsp_przeglad.displayBestPath();
-
-            cout << "Minimalny koszt: " << minCostP << endl;
-            sumTime += tsp_przeglad.getExecutionTime();  // Dodajemy czas wykonania do sumy
-
-        }else if(config.alghoritm_type == "najblizszych") {
-            // Tworzymy obiekt algorytmu najbliższych sąsiadów
+        } else if (config.alghoritm_type == "najblizszych") {
             NajblizszychSasiadow tsp_najblizszy(matrix);
-
-            // Znajdujemy najkrótszą ścieżkę
             int minCostN = tsp_najblizszy.findShortestPath();
-            if (minCostN != -1) {
-                tsp_najblizszy.displayBestPath();  // Wyświetlamy wynik
-            }
-            sumTime += tsp_najblizszy.getExecutionTime();  // Dodajemy czas wykonania do sumy
+            executionTime = tsp_najblizszy.getExecutionTime();
+            executionTimes.push_back(executionTime);  // Dodanie czasu do wektora
 
-        }else if(config.alghoritm_type == "losowy") {
-            // Tworzenie obiektu algorytmu losowego
+        } else if (config.alghoritm_type == "losowy") {
             Losowy tsp_losowy(matrix, config.repetitions, config.instances);
-
-            // Znalezienie najkrótszej ścieżki
             int minCostL = tsp_losowy.findShortestPath();
-            if (minCostL != -1) {
-                tsp_losowy.displayBestPath();  // Wyświetlamy wynik
-            }
-            sumTime += tsp_losowy.getExecutionTime();  // Dodajemy czas wykonania do sumy
-
+            executionTime = tsp_losowy.getExecutionTime();
+            executionTimes.push_back(executionTime);  // Dodanie czasu do wektora
         }
     }
 
-    double avgTime = sumTime / config.repetitions;  // Obliczamy średnią
-    cout << "Sredni czas wykonania algorytmu: " << avgTime << "us" << endl;
-    // Wyniki można zapisywać do pliku w kolejnych krokach
+    // Zapisanie wyników do odpowiednich plików na podstawie algorytmu
+    if (config.alghoritm_type == "przeglad") {
+        przegladFile << matrix.getSize() << endl;  // Używamy rozmiaru macierzy wczytanego z pliku
+        for (double time : executionTimes) {
+            przegladFile << time << " ";  // Zapisujemy czasy oddzielone spacją
+        }
+        przegladFile << endl;  // Nowa linia po zapisaniu czasów
 
+    } else if (config.alghoritm_type == "najblizszych") {
+        najblizszychFile << matrix.getSize() << endl;  // Używamy rozmiaru macierzy wczytanego z pliku
+        for (double time : executionTimes) {
+            najblizszychFile << time << " ";  // Zapisujemy czasy oddzielone spacją
+        }
+        najblizszychFile << endl;  // Nowa linia po zapisaniu czasów
 
+    } else if (config.alghoritm_type == "losowy") {
+        losowyFile << matrix.getSize() << endl;  // Używamy rozmiaru macierzy wczytanego z pliku
+        for (double time : executionTimes) {
+            losowyFile << time << " ";  // Zapisujemy czasy oddzielone spacją
+        }
+        losowyFile << endl;  // Nowa linia po zapisaniu czasów
+    }
 
+    // Obliczanie średniej z czasów wykonania
+    double sumTime = accumulate(executionTimes.begin(), executionTimes.end(), 0.0);
+    double avgTime = sumTime / executionTimes.size();  // Obliczamy średnią
+
+    // Wyświetlanie średniego czasu w terminalu
+    cout << "Sredni czas wykonania algorytmu: " << avgTime << " us" << endl;
+
+    // Zamknięcie plików
+    przegladFile.close();
+    najblizszychFile.close();
+    losowyFile.close();
 
     return 0;
 }
