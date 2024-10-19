@@ -12,6 +12,19 @@
 #include "Losowy.h"
 using namespace std;
 
+// Funkcja oblicza i wyświetla zajętą pamięć przez macierz i wektor executionTimes
+void calculateAndDisplayMemoryUsage(const Matrix& matrix, const vector<double>& executionTimes) {
+    // Obliczanie pamięci zajętej przez macierz
+    size_t matrixMemory = matrix.getSize() * sizeof(int*) + matrix.getSize() * matrix.getSize() * sizeof(int);
+
+    // Obliczanie pamięci dla wektora executionTimes
+    size_t executionTimesMemory = executionTimes.capacity() * sizeof(double);
+
+    // Wyświetlanie zajętej pamięci
+    cout << "Zajeta pamiec: " << (matrixMemory + executionTimesMemory) << " B ("
+         << (matrixMemory + executionTimesMemory) / 1024.0 << " KB)" << endl;
+}
+
 int main() {
     srand(time(0));
 
@@ -116,5 +129,7 @@ int main() {
     najblizszychFile.close();
     losowyFile.close();
 
+    // Wywołanie funkcji do obliczania i wyświetlania zajętej pamięci
+    calculateAndDisplayMemoryUsage(matrix, executionTimes);
     return 0;
 }
