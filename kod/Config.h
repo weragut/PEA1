@@ -8,10 +8,10 @@ class Config {
 public:
     // Publiczne pola konfiguracyjne
     string matrix_source;
-    string output_file;
     string alghoritm_type;
     int repetitions;
     int instances;
+    bool progress_indicator;
 
     // Parametry specyficzne dla opcji "file"
     string input_file;     // Używane, gdy matrix_source = "file"

@@ -2,6 +2,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <fstream>
+#include <chrono>
+#include <thread>
 #include <numeric>  // dla std::accumulate
 #include "Config.h"
 #include "Matrix.h"
@@ -25,47 +27,59 @@ int main() {
     // Wektor do przechowywania czasów wykonania dla każdej instancji
     vector<double> executionTimes;
 
-    // Jeśli źródłem jest plik, rozmiar macierzy zostanie wczytany z pliku, nie z pliku konfiguracyjnego
+    // Jeśli źródłem jest plik, rozmiar macierzy zostanie wczytany z pliku
     if (config.matrix_source == "file") {
         if (!matrix.loadFromFile(config.input_file)) {
             return 1;
         }
     } else if (config.matrix_source == "manual") {
-        matrix.generateManual(config.matrix_size, config.matrix_type);  // Dla manualnych danych
+        matrix.generateManual(config.matrix_size, config.matrix_type);
     }
+
+    // Wyświetlanie rozmiaru macierzy na początku
+    cout << "Rozmiar macierzy: " << matrix.getSize() << "x" << matrix.getSize() << endl;
+
 
     // Tworzenie plików CSV w trybie dopisywania
     ofstream przegladFile("wyniki/przeglad.csv", ios::app);
     ofstream najblizszychFile("wyniki/najblizszych.csv", ios::app);
     ofstream losowyFile("wyniki/losowy.csv", ios::app);
 
-    // Sprawdzenie, czy pliki CSV zostały poprawnie otwarte
     if (!przegladFile || !najblizszychFile || !losowyFile) {
-        cerr << "Nie można otworzyć plików do zapisu wyników!" << endl;
+        cerr << "Nie mozna otworzyć plikow do zapisu wynikow!" << endl;
         return 1;
     }
 
     for (int i = 0; i < config.repetitions; i++) {
-        // Wybór algorytmu
+
+        // Wyświetlanie wskaźnika postępu, jeśli progress_indicator = 1
+        if (config.progress_indicator) {
+            int progress = (i + 1) * 100 / config.repetitions;  // Obliczanie procentu ukończenia
+            cout << "Postep: " << progress << "% (" << i + 1 << "/" << config.repetitions << ")\r";  // Wskaźnik postępu
+            cout.flush();  // Odświeżenie wyświetlania postępu
+        }
+        // Sztuczne opóźnienie dla celów testowych (np. 100 ms)
+        this_thread::sleep_for(chrono::milliseconds(100));
+
+        // Wykonaj algorytm...
         double executionTime = 0.0;
         if (config.alghoritm_type == "przeglad") {
             PrzegladZupelny przeglad(matrix);
             int minCostP = przeglad.findShortestPath();
             executionTime = przeglad.getExecutionTime();
-            executionTimes.push_back(executionTime);  // Dodanie czasu do wektora
-
+            executionTimes.push_back(executionTime);
         } else if (config.alghoritm_type == "najblizszych") {
             NajblizszychSasiadow tsp_najblizszy(matrix);
             int minCostN = tsp_najblizszy.findShortestPath();
             executionTime = tsp_najblizszy.getExecutionTime();
-            executionTimes.push_back(executionTime);  // Dodanie czasu do wektora
-
+            executionTimes.push_back(executionTime);
         } else if (config.alghoritm_type == "losowy") {
             Losowy tsp_losowy(matrix, config.repetitions, config.instances);
             int minCostL = tsp_losowy.findShortestPath();
             executionTime = tsp_losowy.getExecutionTime();
-            executionTimes.push_back(executionTime);  // Dodanie czasu do wektora
+            executionTimes.push_back(executionTime);
         }
+
     }
 
     // Zapisanie wyników do odpowiednich plików na podstawie algorytmu
@@ -91,12 +105,11 @@ int main() {
         losowyFile << endl;  // Nowa linia po zapisaniu czasów
     }
 
-    // Obliczanie średniej z czasów wykonania
-    double sumTime = accumulate(executionTimes.begin(), executionTimes.end(), 0.0);
-    double avgTime = sumTime / executionTimes.size();  // Obliczamy średnią
 
-    // Wyświetlanie średniego czasu w terminalu
-    cout << "Sredni czas wykonania algorytmu: " << avgTime << " us" << endl;
+    // Wyświetlanie średniego czasu
+    double sumTime = accumulate(executionTimes.begin(), executionTimes.end(), 0.0);
+    double avgTime = sumTime / executionTimes.size();
+    cout << "Sredni czas wykonania algorytmu: " << avgTime << " ms" << endl;
 
     // Zamknięcie plików
     przegladFile.close();

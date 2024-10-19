@@ -59,8 +59,8 @@ int NajblizszychSasiadow::findShortestPath() {
     }
 
     auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double, micro> duration = end - start;
-    cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " us" << endl;
+    chrono::duration<double, milli> duration = end - start;
+    cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " ms" << endl;
 
     // Zapisz czas wykonania
     executionTime = duration.count();

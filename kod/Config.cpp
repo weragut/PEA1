@@ -15,8 +15,8 @@ bool Config::loadConfig(const std::string& filename) {
     while (file >> key) { // odczytywanie kluczy, w kazdej iteracji jest odczytywany nowy klucz
         if (key == "matrix_source") { // sprawdzenie klucza i przypisanie wartosci
             file >> matrix_source;
-        } else if (key == "output_file") {
-            file >> output_file;
+        } else if (key == "progress_indicator") {
+            file >> progress_indicator;
         } else if (key == "repetitions") {
             file >> repetitions;
         } else if (key == "instances") {
