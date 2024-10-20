@@ -7,24 +7,23 @@ using namespace std;
 
 class Losowy {
 public:
-    Losowy(const Matrix& matrix, int repetitions, int instances);  // Konstruktor
-    int findShortestPath();  // Znajdź losowo najkrótszą ścieżkę
-    void displayBestPath() const;  // Wyświetl najlepszą ścieżkę
-    int getMinCost() const;  // Zwraca minimalny koszt
-    double getExecutionTime() const;  // Zwraca czas wykonania
+    Losowy(const Matrix& matrix, int instances); // konstruktor
+    int findShortestPath(); // znajdowanie najkrotszej sciezki
+    void displayBestPath() const; // wyswietl najlepsza sciezke (funkcja pomocnicza)
+    int getMinCost() const;// zwraca minimalny koszt
+    double getExecutionTime() const; // zwraca czas wykonania
 
 
 private:
-    const Matrix& matrix;  // Referencja do obiektu macierzy
-    int size;  // Rozmiar macierzy (liczba miast)
-    int repetitions;  // Liczba powtórzeń (ile razy algorytm ma próbować znaleźć trasę)
-    int instances;  // Liczba instancji problemu (ile losowych tras wygenerować dla każdej próby)
-    vector<int> bestPath;  // Najkrótsza znaleziona ścieżka
-    int minCost;  // Koszt najkrótszej znalezionej ścieżki
-    double executionTime;  // Czas wykonania algorytmu
+    const Matrix& matrix; // referencja do obiektu macierzy
+    int size; // rozmiar
+    int instances; // liczba instancji (ile losowych tras zostanie wygenerowanych)
+    vector<int> bestPath; // najkrotsza znaleziona sciezka
+    int minCost; // koszt najkrotszej sciezki
+    double executionTime; // czas wykonania algorytmu
 
 
-    vector<int> generateRandomPath();  // Generuje losową ścieżkę
+    vector<int> generateRandomPath(); // generowanie losowej sciezki
 };
 
 #endif

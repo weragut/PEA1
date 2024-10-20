@@ -7,52 +7,51 @@
 #include <limits>
 #include <chrono>
 using namespace std;
-// Konstruktor
-Losowy::Losowy(const Matrix& m, int repetitions, int instances)
-    : matrix(m), size(m.getSize()), repetitions(repetitions), instances(instances), minCost(std::numeric_limits<int>::max()) {
-    srand(static_cast<unsigned int>(std::time(nullptr)));  // Inicjalizacja generatora liczb losowych
-}
 
-// Generowanie losowej ścieżki
+// konstruktor inicjalizujacy referencje do obiektu macierzy kosztow
+// pobiera rozmiar, liczbe instancji i ustawia minimalny koszt na maksymalna liczbe
+Losowy::Losowy(const Matrix& m, int instances)
+    : matrix(m), size(m.getSize()), instances(instances), minCost(numeric_limits<int>::max()) {}
+
+// generowanie losowej sciezki
 vector<int> Losowy::generateRandomPath() {
     vector<int> path(size);
     for (int i = 0; i < size; ++i) {
-        path[i] = i;  // Wypełnij wektor miastami
+        path[i] = i;
     }
-    random_shuffle(path.begin(), path.end());  // Losowa permutacja miast
+    random_shuffle(path.begin(), path.end());  //losowe przemieszanie miast
     return path;
 }
 
-// Algorytm losowy
+// algorytm losowy
 int Losowy::findShortestPath() {
 
+    // poczatek pomiaru czasu
     auto start = chrono::high_resolution_clock::now();
 
-    // Wykonujemy określoną liczbę powtórzeń (repetitions)
-    for (int rep = 0; rep < repetitions; ++rep) {
+
         for (int inst = 0; inst < instances; ++inst) {
-            vector<int> randomPath = generateRandomPath();  // Generowanie losowej trasy
+            vector<int> randomPath = generateRandomPath();  // generowanie losowej trasy
 
-            // Obliczanie kosztu trasy
-            int currentCost = 0;
-            bool validPath = true;
+            int currentCost = 0; // koszt biezacej sciezki
+            bool validPath = true; // czy mozna przejsc ta sciezka
 
+            // obliczenie kosztu dla wygenerowanej sciezki
             for (int i = 0; i < size - 1; ++i) {
                 int cost = matrix.getCost(randomPath[i], randomPath[i + 1]);
                 if (cost == -1) {
-                    validPath = false;  // Brak połączenia
+                    validPath = false; // brak przejscia
                     break;
                 }
                 currentCost += cost;
             }
 
-            // Dodaj koszt powrotu do początkowego miasta
+            // dodajemy koszt powrotu do pierwszego wierzcholka
             if (validPath) {
                 int returnCost = matrix.getCost(randomPath[size - 1], randomPath[0]);
                 if (returnCost != -1) {
                     currentCost += returnCost;
-
-                    // Aktualizacja najlepszej trasy
+                    // sprawdzenie czy ta trasa ma mniejszy koszt niz dotychczasowa trasa o najmniejszym koszcie
                     if (currentCost < minCost) {
                         minCost = currentCost;
                         bestPath = randomPath;
@@ -60,33 +59,34 @@ int Losowy::findShortestPath() {
                 }
             }
         }
-    }
+
+    // koniec pomiaru czasu
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double, milli> duration = end - start;
     cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " ms" << endl;
 
-    // Zapisz czas wykonania
+    // zapisz czas wykonania
     executionTime = duration.count();
 
-    return minCost;  // Zwróć minimalny znaleziony koszt
+    return minCost;  // zwraca minimalny znaleziony koszt
 }
 
-// Zwraca czas wykonania algorytmu
+// zwraca czas wykonania algorytmu
 double Losowy::getExecutionTime() const {
     return executionTime;
 }
 
-// Wyświetlanie ścieżki
+// wyswietlenie najkrotszej sciezki (funkcja pomocnicza)
 void Losowy::displayBestPath() const {
     cout << "Najkrotsza sciezka (algorytm losowy): ";
     for (int city : bestPath) {
         cout << city << " ";
     }
-    cout << bestPath[0] << endl;  // Powrót do początkowego miasta
+    cout << bestPath[0] << endl;
     cout << "Koszt: " << minCost << endl;
 }
 
-// Zwraca minimalny koszt
+// zwrocenie minimalnego kosztu
 int Losowy::getMinCost() const {
     return minCost;
 }

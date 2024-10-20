@@ -73,7 +73,7 @@ void algorithmExecution() {
                 cout << "Minimalny koszt = " << minCostN << endl;
             }
         } else if (config.alghoritm_type == "losowy") {
-            Losowy tsp_losowy(matrix, config.repetitions, config.instances);
+            Losowy tsp_losowy(matrix, config.instances);
             int minCostL = tsp_losowy.findShortestPath();
             executionTime = tsp_losowy.getExecutionTime();
             executionTimes.push_back(executionTime);
