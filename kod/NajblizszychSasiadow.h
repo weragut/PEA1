@@ -3,21 +3,22 @@
 
 #include "Matrix.h"
 #include <vector>
+using namespace std;
 
 class NajblizszychSasiadow {
 public:
-    NajblizszychSasiadow(const Matrix& matrix);  // Konstruktor
-    int findShortestPath();  // Znajdź ścieżkę algorytmem najbliższych sąsiadów
-    void displayBestPath() const;  // Wyświetl ścieżkę
-    int getMinCost() const;  // Zwraca minimalny koszt
-    double getExecutionTime() const;  // Zwraca czas wykonania
+    NajblizszychSasiadow(const Matrix& matrix); // konstruktor
+    int findShortestPath(); // znajdowanie najkrotszej sciezki
+    void displayBestPath() const; // wyswietl najlepsza sciezke (funkcja pomocnicza)
+    int getMinCost() const; // zwraca minimalny koszt
+    double getExecutionTime() const; // zwraca czas wykonania
 
 private:
-    const Matrix& matrix;  // Referencja do obiektu macierzy
-    int size;  // Rozmiar macierzy (liczba miast)
-    std::vector<int> bestPath;  // Najkrótsza ścieżka (kolejność miast)
-    int minCost;  // Koszt znalezionej ścieżki
-    double executionTime;  // Czas wykonania algorytmu
+    const Matrix& matrix; // referencja do obiektu macierzy
+    int size; // rozmiar
+    vector<int> bestPath;// najkrotsza znaleziona sciezka
+    int minCost; // koszt najkrotszej sciezki
+    double executionTime;// czas wykonania algorytmu
 
 };
 

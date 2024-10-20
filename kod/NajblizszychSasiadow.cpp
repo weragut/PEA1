@@ -1,58 +1,63 @@
+
 #include "NajblizszychSasiadow.h"
 #include <iostream>
 #include <limits>
 #include <chrono>
 using namespace std;
-// Konstruktor
-NajblizszychSasiadow::NajblizszychSasiadow(const Matrix& m)
-    : matrix(m), size(m.getSize()), minCost(numeric_limits<int>::max()) {}
 
-// Algorytm najbliższych sąsiadów
+// konstruktor inicjalizujacy referencje do obiektu macierzy kosztow
+// pobiera rozmiar i ustawia minimalny koszt na maksymalna liczbe
+NajblizszychSasiadow::NajblizszychSasiadow(const Matrix& m) : matrix(m), size(m.getSize()), minCost(numeric_limits<int>::max()) {}
+
+// metoda obliczenia najkrotszej sciezki
 int NajblizszychSasiadow::findShortestPath() {
-    vector<int> visited(size, 0);  // Tablica odwiedzonych miast (0 - nieodwiedzone, 1 - odwiedzone)
-    bestPath.clear();  // Wyczyszczenie poprzednich danych
 
+    vector<int> visited(size, 0);  // wektor odwiedzonych wierzcholkow (0 - nieodwiedzone, 1 - odwiedzone)
+    // poczatkowo wszystkie wierzcholki nieodwiedzone
+    bestPath.clear(); // wyczyszczenie poprzednich danych
+
+    // poczatek pomiaru czasu
     auto start = chrono::high_resolution_clock::now();
 
-    int currentCity = 0;  // Zaczynamy od miasta 0 (można to zmienić na losowe miasto)
-    visited[currentCity] = 1;  // Oznaczamy pierwsze miasto jako odwiedzone
-    bestPath.push_back(currentCity);  // Zapisz startowe miasto do ścieżki
-    minCost = 0;  // Zresetuj minimalny koszt
+    int currentVertex = rand() % size; // losowy wierzcholek startowy
+    visited[currentVertex] = 1; // pierwszy wierzcholek oznaczony jako odwiedzony
+    bestPath.push_back(currentVertex); // zapisuje do sciezki pierwszy wierzcholek
+    minCost = 0;
 
 
-    // Pętla odwiedzająca wszystkie miasta
+    // wybieramy najblizsze nieodwiedzone miasto
     for (int i = 1; i < size; ++i) {
-        int nearestCity = -1;
-        int nearestCost = numeric_limits<int>::max();  // Najbliższe miasto, początkowo maksymalna wartość
+        int nearestVertex = -1; // indeks najblizszego nieodwiedzonego wierzcholka
+        int nearestCost = numeric_limits<int>::max(); // poczatkowo ustawiamy odleglosc na najwieksza mozliwa liczba
 
-        // Znajdź najbliższe nieodwiedzone miasto
+        //szukamy najblizszyego nieodwiedzonego wierzcholka
         for (int j = 0; j < size; ++j) {
-            if (!visited[j]) {  // Jeśli miasto j nie jest odwiedzone
-                int cost = matrix.getCost(currentCity, j);
-                if (cost != -1 && cost < nearestCost) {  // Znajdź najniższy koszt
-                    nearestCity = j;
+            if (!visited[j]) { // jesli wierzcholek nieodwiedzony
+                int cost = matrix.getCost(currentVertex, j);
+                if (cost != -1 && cost < nearestCost) { // jesli ma majmniejszy koszt
+                    nearestVertex = j;
                     nearestCost = cost;
                 }
             }
         }
 
-        // Aktualizacja ścieżki
-        if (nearestCity != -1) {
-            visited[nearestCity] = 1;  // Oznacz najbliższe miasto jako odwiedzone
-            bestPath.push_back(nearestCity);  // Dodaj miasto do ścieżki
-            minCost += nearestCost;  // Dodaj koszt do całkowitego kosztu
-            currentCity = nearestCity;  // Przejdź do kolejnego miasta
+        // odwiedzenie najblizszego wierzcholka
+        if (nearestVertex != -1) {
+            visited[nearestVertex] = 1; // wierzcholek odwiedzony
+            bestPath.push_back(nearestVertex); // wierzcholek dodajemy do sciezki
+            minCost += nearestCost; // dodaj koszt wieszcholka do calkowitego kosztu
+            currentVertex = nearestVertex; // przechodzimy do kolejnego wierzcholka
         } else {
             cerr << "Blad: Nie znaleziono polaczenia." << endl;
             return -1;
         }
     }
 
-    // Powrót do początkowego miasta
-    int returnCost = matrix.getCost(currentCity, bestPath[0]);
+    //powrot do pierwszego miasta
+    int returnCost = matrix.getCost(currentVertex, bestPath[0]); // koszt z ostatniego do pierwszego wierzcholka
     if (returnCost != -1) {
         minCost += returnCost;
-        bestPath.push_back(bestPath[0]);  // Zamknij cykl, dodając powrót do pierwszego miasta
+        bestPath.push_back(bestPath[0]); // dodaj pierwsze miasto na koniec listy
     } else {
         cerr << "Blad: Brak polaczenia powrotnego do miasta startowego." << endl;
         return -1;
@@ -62,18 +67,18 @@ int NajblizszychSasiadow::findShortestPath() {
     chrono::duration<double, milli> duration = end - start;
     cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " ms" << endl;
 
-    // Zapisz czas wykonania
+    // zapisz czas wykonania
     executionTime = duration.count();
 
     return minCost;
 }
 
-// Zwraca czas wykonania algorytmu
+// zwraca czas wykonania algorytmu
 double NajblizszychSasiadow::getExecutionTime() const {
     return executionTime;
 }
 
-// Wyświetlanie ścieżki
+// wyswietlenie najkrotszej sciezki (funkcja pomocnicza)
 void NajblizszychSasiadow::displayBestPath() const {
     cout << "Najkrotsza sciezka (algorytm najblizszych sasiadow): ";
     for (int city : bestPath) {
@@ -83,7 +88,7 @@ void NajblizszychSasiadow::displayBestPath() const {
     cout << "Koszt: " << minCost << endl;
 }
 
-// Zwraca minimalny koszt
+// zwrocenie minimalnego kosztu
 int NajblizszychSasiadow::getMinCost() const {
     return minCost;
 }

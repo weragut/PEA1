@@ -2,26 +2,26 @@
 #define PRZEGLADZUPELNY_H
 
 #include <vector>
-#include <limits>
 #include "Matrix.h"
+using namespace std;
 
 class PrzegladZupelny {
 public:
     PrzegladZupelny(const Matrix& matrix); // konstruktor
-    int findShortestPath();  // Znajdź najkrótszą ścieżkę
-    void displayBestPath() const;  // Wyświetl najlepszą ścieżkę
-    int getMinCost() const;  // Zwraca minimalny koszt
-    double getExecutionTime() const;  // Zwraca czas wykonania
+    int findShortestPath(); // znajdowanie najkrotszej sciezki
+    void displayBestPath() const; // wyswietl najlepsza sciezke (funkcja pomocnicza)
+    int getMinCost() const; // zwraca minimalny koszt
+    double getExecutionTime() const; // zwraca czas wykonania
 
 
 private:
-    const Matrix& matrix;  // Referencja do obiektu macierzy
-    int size;  // Rozmiar macierzy (liczba miast)
-    std::vector<int> bestPath;  // Najkrótsza znaleziona ścieżka
-    int minCost;  // Koszt najkrótszej ścieżki
-    double executionTime;  // Czas wykonania algorytmu
+    const Matrix& matrix; // referencja do obiektu macierzy
+    int size; // rozmiar
+    vector<int> bestPath; // najkrotsza znaleziona sciezka
+    int minCost; // koszt najkrotszej sciezki
+    double executionTime; // czas wykonania algorytmu
 
-   // void calculateAllPermutations();  // Oblicza wszystkie permutacje miast
+   // void calculateAllPermutations(); // oblicza wszystkie permutacje
 };
 
 #endif
