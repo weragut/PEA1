@@ -6,21 +6,21 @@ using namespace std;
 
 class Matrix {
 public:
-    Matrix();           // konstruktor
-    ~Matrix();          // dekonstruktor
+    Matrix(); // konstruktor
+    ~Matrix(); // dekonstruktor
 
     bool loadFromFile(const string& filename);   // wczytywanie macierzy z pliku
-    void generateManual(int size, const string& type);  // generowanie losowej macierzy
+    void generateManual(int size, const string& type);  // generowanie losowej macierzy, argumenty: rozmiar, typ (synchronous lub asynchronous)
 
-    void display() const;  // wyswietlenie macierzy
-    void freeMemory();     // zwolnienie pamieci
+    void display() const; // wyswietlenie macierzy (funkcja pomocnicza)
+    void freeMemory(); // zwolnienie pamieci
 
-    int getSize() const;  // Metoda zwracająca rozmiar macierzy
-    int getCost(int i, int j) const;  // Metoda zwracająca koszt przejścia z miasta i do miasta j
+    int getSize() const; // zwraca rozmiar macierzy
+    int getCost(int i, int j) const; // zwraca koszt przejscia z miasta do miasta
 
 private:
-    int** matrix;          // wskaznik do dwuwymiarowej tablicy dynamicznej
-    int size;              // rozmiar macierzy
+    int** matrix; // wskaznik do dwuwymiarowej tablicy (dynamicznie alokowana macierz)
+    int size; // rozmiar macierzy
 };
 
 #endif

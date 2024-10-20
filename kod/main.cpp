@@ -13,6 +13,12 @@
 #include "PrzegladZupelny.h"
 #include "Losowy.h"
 using namespace std;
+Config config;
+
+// deklaracja macierzy
+Matrix matrix;
+// Wektor do przechowywania czasów wykonania dla każdej instancji
+vector<double> executionTimes;
 
 void printMemoryUsage() {
     PROCESS_MEMORY_COUNTERS memCounter; // struktura do przechowywania danych o zuzyciu pamieci
@@ -35,43 +41,7 @@ void calculateAndDisplayMemoryUsage(const Matrix& matrix, const vector<double>& 
          << (matrixMemory + executionTimesMemory) / 1024.0 << " KB)" << endl;
 }
 
-int main() {
-    srand(time(0));
-
-    // wczytaj plik konfiguracyjny
-    Config config;
-    if (!config.loadConfig("wejscie/plik_konfiguracyjny.txt")) {
-        return 1;
-    }
-
-    // deklaracja macierzy
-    Matrix matrix;
-
-    // Wektor do przechowywania czasów wykonania dla każdej instancji
-    vector<double> executionTimes;
-
-    // Jeśli źródłem jest plik, rozmiar macierzy zostanie wczytany z pliku
-    if (config.matrix_source == "file") {
-        if (!matrix.loadFromFile(config.input_file)) {
-            return 1;
-        }
-    } else if (config.matrix_source == "manual") {
-        matrix.generateManual(config.matrix_size, config.matrix_type);
-    }
-
-    // Wyświetlanie rozmiaru macierzy na początku
-    cout << "Rozmiar macierzy: " << matrix.getSize() << "x" << matrix.getSize() << endl;
-
-
-    // Tworzenie plików CSV w trybie dopisywania
-    ofstream przegladFile("wyniki/przeglad.csv", ios::app);
-    ofstream najblizszychFile("wyniki/najblizszych.csv", ios::app);
-    ofstream losowyFile("wyniki/losowy.csv", ios::app);
-
-    if (!przegladFile || !najblizszychFile || !losowyFile) {
-        cerr << "Nie mozna otworzyć plikow do zapisu wynikow!" << endl;
-        return 1;
-    }
+void algorithmExecution() {
 
     for (int i = 0; i < config.repetitions; i++) {
 
@@ -91,20 +61,38 @@ int main() {
             int minCostP = przeglad.findShortestPath();
             executionTime = przeglad.getExecutionTime();
             executionTimes.push_back(executionTime);
+            if (config.matrix_source == "file") {
+                cout << "Minimalny koszt = " << minCostP << endl;
+            }
         } else if (config.alghoritm_type == "najblizszych") {
             NajblizszychSasiadow tsp_najblizszy(matrix);
             int minCostN = tsp_najblizszy.findShortestPath();
             executionTime = tsp_najblizszy.getExecutionTime();
             executionTimes.push_back(executionTime);
+            if (config.matrix_source == "file") {
+                cout << "Minimalny koszt = " << minCostN << endl;
+            }
         } else if (config.alghoritm_type == "losowy") {
             Losowy tsp_losowy(matrix, config.repetitions, config.instances);
             int minCostL = tsp_losowy.findShortestPath();
             executionTime = tsp_losowy.getExecutionTime();
             executionTimes.push_back(executionTime);
+            if (config.matrix_source == "file") {
+                cout << "Minimalny koszt = " << minCostL << endl;
+            }
         }
 
     }
 
+    // Tworzenie plików CSV w trybie dopisywania
+    ofstream przegladFile("wyniki/przeglad.csv", ios::app);
+    ofstream najblizszychFile("wyniki/najblizszych.csv", ios::app);
+    ofstream losowyFile("wyniki/losowy.csv", ios::app);
+
+    if (!przegladFile || !najblizszychFile || !losowyFile) {
+        cerr << "Nie mozna otworzyć plikow do zapisu wynikow!" << endl;
+        //return 1;
+    }
     // Zapisanie wyników do odpowiednich plików na podstawie algorytmu
     if (config.alghoritm_type == "przeglad") {
         przegladFile << matrix.getSize() << endl;  // Używamy rozmiaru macierzy wczytanego z pliku
@@ -127,22 +115,46 @@ int main() {
         }
         losowyFile << endl;  // Nowa linia po zapisaniu czasów
     }
-
-
-    // Wyświetlanie średniego czasu
-    double sumTime = accumulate(executionTimes.begin(), executionTimes.end(), 0.0);
-    double avgTime = sumTime / executionTimes.size();
-    cout << "Sredni czas wykonania algorytmu: " << avgTime << " ms" << endl;
-
     // Zamknięcie plików
     przegladFile.close();
     najblizszychFile.close();
     losowyFile.close();
 
+    // Wyświetlanie średniego czasu
+    double sumTime = accumulate(executionTimes.begin(), executionTimes.end(), 0.0);
+    double avgTime = sumTime / executionTimes.size();
+    cout << "Sredni czas wykonania algorytmu: " << avgTime << " ms" << endl;
+}
+
+int main() {
+    srand(time(0)); // ziarno do funkcji rand
+
+    // wczytaj plik konfiguracyjny
+    if (!config.loadConfig("wejscie/plik_konfiguracyjny.txt")) {
+        return 1;
+    }
+
+    // Jeśli źródłem jest plik, rozmiar macierzy zostanie wczytany z pliku
+    if (config.matrix_source == "file") {
+        if (!matrix.loadFromFile(config.input_file)) {
+            return 1;
+        }
+    } else if (config.matrix_source == "manual") {
+        matrix.generateManual(config.matrix_size, config.matrix_type);
+    }
+    // Wyświetlanie rozmiaru macierzy na początku
+    cout << "Rozmiar macierzy: " << matrix.getSize() << "x" << matrix.getSize() << endl;
+
+
+
+    algorithmExecution();
+
+    matrix.display();
 
     //calculateAndDisplayMemoryUsage(matrix, executionTimes);
 
     // wyswietlenie zajetej pamieci
     printMemoryUsage();
+
     return 0;
 }
