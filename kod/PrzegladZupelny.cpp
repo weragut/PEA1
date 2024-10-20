@@ -11,7 +11,7 @@ PrzegladZupelny::PrzegladZupelny(const Matrix& m)
 
 // metoda obliczenia najkrotszej sciezki
 int PrzegladZupelny::findShortestPath() {
-    std::vector<int> cities(size);  // wektor miast
+    vector<int> cities(size);  // wektor miast
     for (int i = 0; i < size; ++i) {
         cities[i] = i;  // wypełnienie wektora miastami (0, 1, ..., size-1)
     }
@@ -74,12 +74,12 @@ double PrzegladZupelny::getExecutionTime() const {
 
 // wyświetlanie najkrótszej ścieżki
 void PrzegladZupelny::displayBestPath() const {
-    std::cout << "Najkrotsza sciezka: ";
+    cout << "Najkrotsza sciezka: ";
     for (int city : bestPath) {
-        std::cout << city << " ";  // wypisz kolejność miast
+        cout << city << " ";  // wypisz kolejność miast
     }
-    std::cout << bestPath[0] << std::endl;  // powrót do początkowego miasta
-    std::cout << "Koszt: " << minCost << std::endl;
+    cout << bestPath[0] << endl;  // powrót do początkowego miasta
+    cout << "Koszt: " << minCost << endl;
 }
 
 // zwrócenie minimalnego kosztu

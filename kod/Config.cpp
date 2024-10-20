@@ -1,13 +1,15 @@
 #include "Config.h"
 #include <iostream>
 #include <fstream>
+
 using namespace std;
 
-bool Config::loadConfig(const std::string& filename) {
-    std::ifstream file(filename);
+
+bool Config::loadConfig(const string& filename) {
+    ifstream file(filename);
 
     if (!file.is_open()) {
-        std::cerr << "Nie mozna otworzyc pliku konfiguracyjnego: " << filename << std::endl;
+        cerr << "Nie mozna otworzyc pliku konfiguracyjnego: " << filename << endl;
         return false;
     }
 

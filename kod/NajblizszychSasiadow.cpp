@@ -43,7 +43,7 @@ int NajblizszychSasiadow::findShortestPath() {
             minCost += nearestCost;  // Dodaj koszt do całkowitego kosztu
             currentCity = nearestCity;  // Przejdź do kolejnego miasta
         } else {
-            std::cerr << "Błąd: Nie znaleziono połączenia." << std::endl;
+            cerr << "Blad: Nie znaleziono polaczenia." << endl;
             return -1;
         }
     }
@@ -54,7 +54,7 @@ int NajblizszychSasiadow::findShortestPath() {
         minCost += returnCost;
         bestPath.push_back(bestPath[0]);  // Zamknij cykl, dodając powrót do pierwszego miasta
     } else {
-        std::cerr << "Błąd: Brak połączenia powrotnego do miasta startowego." << std::endl;
+        cerr << "Blad: Brak polaczenia powrotnego do miasta startowego." << endl;
         return -1;
     }
 
@@ -75,9 +75,9 @@ double NajblizszychSasiadow::getExecutionTime() const {
 
 // Wyświetlanie ścieżki
 void NajblizszychSasiadow::displayBestPath() const {
-    std::cout << "Najkrotsza sciezka (algorytm najblizszych sasiadow): ";
+    cout << "Najkrotsza sciezka (algorytm najblizszych sasiadow): ";
     for (int city : bestPath) {
-        std::cout << city << " ";
+        cout << city << " ";
     }
     cout << endl;
     cout << "Koszt: " << minCost << endl;

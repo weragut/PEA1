@@ -78,12 +78,12 @@ double Losowy::getExecutionTime() const {
 
 // Wyświetlanie ścieżki
 void Losowy::displayBestPath() const {
-    std::cout << "Najkrotsza sciezka (algorytm losowy): ";
+    cout << "Najkrotsza sciezka (algorytm losowy): ";
     for (int city : bestPath) {
-        std::cout << city << " ";
+        cout << city << " ";
     }
-    std::cout << bestPath[0] << std::endl;  // Powrót do początkowego miasta
-    std::cout << "Koszt: " << minCost << std::endl;
+    cout << bestPath[0] << endl;  // Powrót do początkowego miasta
+    cout << "Koszt: " << minCost << endl;
 }
 
 // Zwraca minimalny koszt

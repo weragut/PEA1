@@ -5,6 +5,8 @@
 #include <chrono>
 #include <thread>
 #include <numeric>  // dla std::accumulate
+#include <windows.h> // do pomiaru zajetej pamieci
+#include <psapi.h> // do pomiaru zajetej pamieci
 #include "Config.h"
 #include "Matrix.h"
 #include "NajblizszychSasiadow.h"
@@ -12,7 +14,15 @@
 #include "Losowy.h"
 using namespace std;
 
-// Funkcja oblicza i wyświetla zajętą pamięć przez macierz i wektor executionTimes
+void printMemoryUsage() {
+    PROCESS_MEMORY_COUNTERS memCounter; // struktura do przechowywania danych o zuzyciu pamieci
+    GetProcessMemoryInfo(GetCurrentProcess(), &memCounter, sizeof(memCounter)); // ta funkcja pobiera informacje o zuzyciu pamieci dla danego procesu
+    // argumenty: process handle, wskaznik na strukture przechowujaca dane o pamieci, rozmiar struktury
+    cout << "Pamiec szczytowa (PeakWorkingSetSize): " << memCounter.PeakWorkingSetSize / 1024 << " KB" << endl;
+    cout << "Aktualnie zajeta pamiec (WorkingSetSize): " << memCounter.WorkingSetSize / 1024 << " KB" << endl;
+}
+
+// funkcja do obliczania zajetej pamieci
 void calculateAndDisplayMemoryUsage(const Matrix& matrix, const vector<double>& executionTimes) {
     // Obliczanie pamięci zajętej przez macierz
     size_t matrixMemory = matrix.getSize() * sizeof(int*) + matrix.getSize() * matrix.getSize() * sizeof(int);
@@ -129,7 +139,10 @@ int main() {
     najblizszychFile.close();
     losowyFile.close();
 
-    // Wywołanie funkcji do obliczania i wyświetlania zajętej pamięci
-    calculateAndDisplayMemoryUsage(matrix, executionTimes);
+
+    //calculateAndDisplayMemoryUsage(matrix, executionTimes);
+
+    // wyswietlenie zajetej pamieci
+    printMemoryUsage();
     return 0;
 }
