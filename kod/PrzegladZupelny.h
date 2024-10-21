@@ -10,7 +10,6 @@ public:
     PrzegladZupelny(const Matrix& matrix); // konstruktor
     int findShortestPath(); // znajdowanie najkrotszej sciezki
     void displayBestPath() const; // wyswietl najlepsza sciezke (funkcja pomocnicza)
-    int getMinCost() const; // zwraca minimalny koszt
     double getExecutionTime() const; // zwraca czas wykonania
 
 

@@ -28,7 +28,7 @@ bool Matrix::loadFromFile(const string& filename) {
     // wczytanie wartości z pliku do macierzy
     matrix = new int*[size]; // alokacja dynamicznej tablicy wskazników
     for (int i = 0; i < size; ++i) {
-        matrix[i] = new int[size]; // alokacja pamieci wierszy macierzy
+        matrix[i] = new int[size]; // alokacja pamieci dla wierszy macierzy
         for (int j = 0; j < size; ++j) {
             inputFile >> matrix[i][j]; // wczytanie wrtosci
         }
@@ -39,10 +39,10 @@ bool Matrix::loadFromFile(const string& filename) {
 }
 
 // funkcja generujaca losowa macierz
-void Matrix::generateManual(int newsize, const string& type) {
+void Matrix::generateManual(int matrixsize, const string& type) {
     // usuniecie pamieci przed wczytaniem macierzy
     freeMemory();
-    size = newsize; // przypisanie rozmiaru
+    size = matrixsize; // przypisanie rozmiaru
     matrix = new int*[size]; // alokacja dynamicznej tablicy wskazników
 
     if(type == "asynchronous") {
@@ -64,7 +64,7 @@ void Matrix::generateManual(int newsize, const string& type) {
                     matrix[i][j] = -1;  // przekatna = -1
                 } else if(i<j){
                     matrix[i][j] = rand() % 100 + 1;
-                }else if(i>j) { // jesli nr wiersza jest wiekszy niz nr kolumny
+                }else if(i>j) { // dla elementow ponizej przekatnej
                     matrix[i][j] = matrix[j][i]; // to zapisujemy wartosc symetryczna do przekatnej
                 }
             }

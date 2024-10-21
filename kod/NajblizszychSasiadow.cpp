@@ -11,10 +11,9 @@ NajblizszychSasiadow::NajblizszychSasiadow(const Matrix& m) : matrix(m), size(m.
 
 // metoda obliczenia najkrotszej sciezki
 int NajblizszychSasiadow::findShortestPath() {
-
+    bestPath.clear(); // wyczyszczenie poprzednich danych
     vector<int> visited(size, 0);  // wektor odwiedzonych wierzcholkow (0 - nieodwiedzone, 1 - odwiedzone)
     // poczatkowo wszystkie wierzcholki nieodwiedzone
-    bestPath.clear(); // wyczyszczenie poprzednich danych
 
     // poczatek pomiaru czasu
     auto start = chrono::high_resolution_clock::now();
@@ -25,7 +24,7 @@ int NajblizszychSasiadow::findShortestPath() {
     minCost = 0;
 
 
-    // wybieramy najblizsze nieodwiedzone miasto
+    // wybieramy najblizszy nieodwiedzony wierzcholek
     for (int i = 1; i < size; ++i) {
         int nearestVertex = -1; // indeks najblizszego nieodwiedzonego wierzcholka
         int nearestCost = numeric_limits<int>::max(); // poczatkowo ustawiamy odleglosc na najwieksza mozliwa liczba
@@ -86,9 +85,4 @@ void NajblizszychSasiadow::displayBestPath() const {
     }
     cout << endl;
     cout << "Koszt: " << minCost << endl;
-}
-
-// zwrocenie minimalnego kosztu
-int NajblizszychSasiadow::getMinCost() const {
-    return minCost;
 }

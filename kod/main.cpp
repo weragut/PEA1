@@ -38,11 +38,12 @@ void algorithmExecution() {
         if (config.progress_indicator) {
             int progress = (i + 1) * 100 / config.repetitions;  // obliczenie procentu ukonczenia
             cout << "Postep: " << progress << "% (" << i + 1 << "/" << config.repetitions << ")\r";
-            cout.flush();  // Odświeżenie wyświetlania postępu
+            cout.flush();  // odswiezenie
+
         }
 
         // opoznienie, zeby zdazyl wyswietlic sie postep
-        this_thread::sleep_for(chrono::milliseconds(100));
+        this_thread::sleep_for(chrono::milliseconds(300));
 
         double executionTime = 0.0;
         int minCost = -1;

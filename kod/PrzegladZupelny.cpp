@@ -34,13 +34,13 @@ int PrzegladZupelny::findShortestPath() {
                 break;
             }
             currentCost += cost;
-/*
+
             // przerwij obliczenia, jesli dotychczasowy koszt jest wiekszy niż minCost
             if (currentCost >= minCost) {
                 validPath = false;
                 break;
             }
-            */
+
         }
 
         // dodaj koszt powrotu do pierwszego miasta
@@ -85,7 +85,3 @@ void PrzegladZupelny::displayBestPath() const {
     cout << "Koszt: " << minCost << endl;
 }
 
-// zwrocenie minimalnego kosztu
-int PrzegladZupelny::getMinCost() const {
-    return minCost;
-}

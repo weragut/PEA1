@@ -13,25 +13,21 @@ using namespace std;
 Losowy::Losowy(const Matrix& m, int instances)
     : matrix(m), size(m.getSize()), instances(instances), minCost(numeric_limits<int>::max()) {}
 
-// generowanie losowej sciezki
-vector<int> Losowy::generateRandomPath() {
-    vector<int> path(size);
-    for (int i = 0; i < size; ++i) {
-        path[i] = i;
-    }
-    random_shuffle(path.begin(), path.end());  //losowe przemieszanie miast
-    return path;
-}
 
 // algorytm losowy
 int Losowy::findShortestPath() {
+    // wektor do przechowywania kolejnosci wierzcholkow
+    vector<int> randomPath(size);
+    for (int i = 0; i < size; ++i) {
+        randomPath[i] = i;
+    }
 
     // poczatek pomiaru czasu
     auto start = chrono::high_resolution_clock::now();
 
 
         for (int inst = 0; inst < instances; ++inst) {
-            vector<int> randomPath = generateRandomPath();  // generowanie losowej trasy
+            random_shuffle(randomPath.begin(), randomPath.end());  //losowe przemieszanie wierzcholkow
 
             int currentCost = 0; // koszt biezacej sciezki
             bool validPath = true; // czy mozna przejsc ta sciezka
@@ -76,6 +72,7 @@ double Losowy::getExecutionTime() const {
     return executionTime;
 }
 
+
 // wyswietlenie najkrotszej sciezki (funkcja pomocnicza)
 void Losowy::displayBestPath() const {
     cout << "Najkrotsza sciezka (algorytm losowy): ";
@@ -84,9 +81,4 @@ void Losowy::displayBestPath() const {
     }
     cout << bestPath[0] << endl;
     cout << "Koszt: " << minCost << endl;
-}
-
-// zwrocenie minimalnego kosztu
-int Losowy::getMinCost() const {
-    return minCost;
 }

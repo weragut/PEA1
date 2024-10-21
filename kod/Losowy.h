@@ -10,7 +10,6 @@ public:
     Losowy(const Matrix& matrix, int instances); // konstruktor
     int findShortestPath(); // znajdowanie najkrotszej sciezki
     void displayBestPath() const; // wyswietl najlepsza sciezke (funkcja pomocnicza)
-    int getMinCost() const;// zwraca minimalny koszt
     double getExecutionTime() const; // zwraca czas wykonania
 
 
@@ -22,8 +21,6 @@ private:
     int minCost; // koszt najkrotszej sciezki
     double executionTime; // czas wykonania algorytmu
 
-
-    vector<int> generateRandomPath(); // generowanie losowej sciezki
 };
 
 #endif
