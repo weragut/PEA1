@@ -18,6 +18,7 @@ public:
     // gdy matrix_source = "file"
     int matrix_size; // rozmiar macierzy
     string matrix_type; // typ macierzy: synchronous lub asynchronous
+    bool display_cost; // 1 - wyswietla koszt, 0 - nie wyswietla
 
     // funkcja do wczytania pliku konfiguracyjnego
     bool loadConfig(const string& filename);

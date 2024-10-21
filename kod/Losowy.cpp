@@ -63,7 +63,7 @@ int Losowy::findShortestPath() {
     // koniec pomiaru czasu
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double, milli> duration = end - start;
-    cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " ms" << endl;
+    //cout << "Czas wykonania wybranego fragmentu: " << duration.count() << " ms" << endl;
 
     // zapisz czas wykonania
     executionTime = duration.count();

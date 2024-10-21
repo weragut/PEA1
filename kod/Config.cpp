@@ -31,6 +31,8 @@ bool Config::loadConfig(const string& filename) {
             file >> matrix_type;
         }else if (key == "alghoritm_type") {
             file >> alghoritm_type;
+        }else if (key == "display_cost") {
+            file >> display_cost;
         }
     }
 
